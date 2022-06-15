@@ -1,33 +1,42 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { auth } from '../db/firebaseConfig'
+import { retrieveLocal, storeLocal } from '../helpers/localStorage'
+import { AuthContext } from '../providers/authContext'
+import { UserContext } from '../providers/userContext'
 import { Loading } from '../screens/screens'
 import AppNavigator from './AppNavigator/AppNavigator'
 import LoginNavigator from './LoginNavigator/LoginNavigator'
 
 
 const InitialNavigator = () => {
-    const [isLoading, setIsLoading] = useState(false)
-    const [validated, setValidated] = useState(false)
-
-    const handleFirstOpen = async () => {
-        //Search Token
-        //Search Validation
-        //Search profile
-        //Load
-    }
+    const { authenticate, loading, setAuth } = useContext(AuthContext)
+    const { setUser } = useContext(UserContext)
+    const [loadingAuth, setLoadingAuth] = useState(true)
 
     useEffect(() => {
-        handleFirstOpen()
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                setAuth(false)
+            } else {
+                console.log('authed user', user)
+                setUser(user)
+                storeLocal(user, 'user')
+                setAuth(true)
+                storeLocal(true, 'auth')
+            }
+            setLoadingAuth(false)
+        })
     }, [])
 
-    if (isLoading === true) {
+    if (loading === true || loadingAuth === true) {
         return <Loading />
     }
 
-    if (isLoading === false && validated === false) {
+    if (loading === false && authenticate === false) {
         return <LoginNavigator />
     }
 
-    if (isLoading === false && validated !== false) {
+    if (loading === false && authenticate !== false) {
         return <AppNavigator />
     }
 }

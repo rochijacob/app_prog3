@@ -4,9 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text } from 'react-native'
 import routes from './routes';
-import Onboarding from '../../screens/Onboarding/Onboarding';
-import { Login } from '../../screens/screens';
-import Register from '../../screens/Register/Register';
+import { Login, Onboarding, Register } from '../../screens/screens';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -22,7 +20,7 @@ function HomeScreen() {
 
 const LoginNavigator = () => {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'red', width: '100%' }}>
+        <SafeAreaView style={{ flex: 1, width: '100%' }}>
             <NavigationContainer>
                 <Navigator screenOptions={{ headerShown: false }} initialRouteName={routes.ONBOARDING}>
                     <Screen name='Onboarding' component={Onboarding} />
@@ -35,11 +33,10 @@ const LoginNavigator = () => {
                     />
                     <Screen
                         name="Register"
-                        component={Register}
-                    // children={() => (
-                    //     //Otra forma de hacer el screen y pasar props
-                    //     <Register />
-                    // )}
+                        children={() => (
+                            //Otra forma de hacer el screen y pasar props
+                            <Register />
+                        )}
                     />
                 </Navigator>
             </NavigationContainer>

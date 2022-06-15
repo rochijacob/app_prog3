@@ -1,12 +1,14 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
+import { Button } from 'native-base'
 
 export default function Onboarding({ navigation }) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>Onboarding</Text>
-            <Button title='Register' onPress={() => navigation.navigate('Register')} />
-            <Button title='Login' onPress={() => navigation.navigate('Login')} />
+            <Button.Group space={2} direction='column'>
+                <Button size='lg' onPress={() => navigation.navigate('Register')}>Register</Button>
+                <Button size='lg' onPress={() => navigation.navigate('Login')} >Login</Button>
+            </Button.Group>
         </View>
     )
 }

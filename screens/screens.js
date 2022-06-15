@@ -1,2 +1,5 @@
 export {default as Login} from './Login/Login'
 export {default as Loading} from './Loading/Loading'
+export {default as Register} from './Register/Register'
+export {default as Onboarding} from  './Onboarding/Onboarding'
+export {default as Profile} from './Profile/Profile'

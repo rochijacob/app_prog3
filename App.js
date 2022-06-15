@@ -1,21 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
+import { Center, NativeBaseProvider } from 'native-base';
 import { StyleSheet, Text, View } from 'react-native';
 import InitialNavigator from './navigation/InitialNavigator';
+import { AuthProvider } from './providers/authContext';
+import { UserProvider } from './providers/userContext';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <InitialNavigator />
-      <StatusBar style="auto" />
-    </View>
+    <NativeBaseProvider>
+      <Center flex={1}>
+      <AuthProvider>
+        <UserProvider>
+          <InitialNavigator />
+          <Toast />
+        </UserProvider>
+      </AuthProvider>
+      </Center>
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
