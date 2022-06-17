@@ -10,22 +10,33 @@ import LoginNavigator from './LoginNavigator/LoginNavigator'
 
 const InitialNavigator = () => {
     const { authenticate, loading, setAuth } = useContext(AuthContext)
-    const { setUser } = useContext(UserContext)
+    const { setUser, user } = useContext(UserContext)
     const [loadingAuth, setLoadingAuth] = useState(true)
 
+    const handleFirstOpen = async () => {
+        const u = await retrieveLocal('user')
+        console.log(u)
+        setUser(u)
+        const a = await retrieveLocal('auth')
+        console.log('auth', a)
+        setAuth(a)
+    }
+
     useEffect(() => {
+        handleFirstOpen()
         auth.onAuthStateChanged((user) => {
+            console.log('Corriendo on state changed')
             if (!user) {
-                setAuth(false)
+                console.log('No auth change')
             } else {
                 console.log('authed user', user)
-                setUser(user)
-                storeLocal(user, 'user')
+                setUser(auth.currentUser)
                 setAuth(true)
                 storeLocal(true, 'auth')
             }
             setLoadingAuth(false)
         })
+        setLoadingAuth(false)
     }, [])
 
     if (loading === true || loadingAuth === true) {

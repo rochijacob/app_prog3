@@ -4,11 +4,15 @@ import { auth, db } from '../db/firebaseConfig'
 import Toast from 'react-native-toast-message';
 import { UserContext } from '../providers/userContext';
 import { AuthContext } from '../providers/authContext';
-import { storeLocal } from '../helpers/localStorage';
+import { removeLocal, storeLocal } from '../helpers/localStorage';
+import { useToast } from 'native-base';
 
 export default function useFirebase() {
-    const { user, setUser } = useContext(UserContext)
+    const { user, setUser, setPosts, posts } = useContext(UserContext)
     const { setAuth } = useContext(AuthContext)
+    const toast = useToast()
+
+
     const registerUser = (data) => {
         auth.createUserWithEmailAndPassword(data.email, data.password)
             .then(responseRegister => {
@@ -21,20 +25,12 @@ export default function useFirebase() {
                     displayName: data.user,
                     createdAt: Date.now()
                 })
-                let user = {
-                    name: data.name,
-                    email: data.email,
-                }
-                setUser(user)
-                storeLocal(user, 'user')
-                setAuth(true)
-                storeLocal(true, 'auth')
             })
             .catch(error => {
                 console.log(error);
-                Toast.show({
-                    type: 'error',
-                    text1: error.message
+                toast.show({
+                    description: error.message,
+                    placement: 'top'
                 })
             })
     }
@@ -43,20 +39,11 @@ export default function useFirebase() {
         auth.signInWithEmailAndPassword(data.email, data.password)
             .then(response => {
                 console.log('success', response.user)
-                let user = {
-                    name: response.user.displayName,
-                    email: response.user.email,
-                }
-                setUser(user)
-                storeLocal(user, 'user')
-                setAuth(true)
-                storeLocal(true, 'auth')
-                console.log(user)
             }).catch(e => {
                 console.log(e)
-                Toast.show({
-                    type: 'error',
-                    text1: e.message
+                toast.show({
+                    description: e.message,
+                    placement: 'top'
                 })
             })
     }
@@ -70,11 +57,30 @@ export default function useFirebase() {
             .catch(error => {
                 console.log(error)
             })
+        removeLocal('user')
+        removeLocal('auth')
+        setAuth(false)
+    }
+
+    const submitPost = (data) => {
+        db.collection('posts').add({
+            owner: auth.currentUser.email, //autenticacion del ususario
+            title: data.titulo,
+            description: data.description,
+            likes: [],
+            comments: [],
+            createdAt: Date.now(),
+            photo: data.image,
+        }).catch((error) => {
+            console.log('No se pudo crear')
+        })
+        setPosts([...posts, data])
     }
 
     return {
         registerUser,
         loginUser,
-        logoutUser
+        logoutUser,
+        submitPost
     }
 }

@@ -27,6 +27,8 @@ const Login = () => {
         loginUser(data)
     }
 
+    console.log(errors)
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <KeyboardAvoidingWrapper>

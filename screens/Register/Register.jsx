@@ -18,7 +18,6 @@ export default function Register() {
         mode: 'onBlur',
         defaultValues: {
             name: '',
-            user: '',
             email: '',
             password: '',
         },

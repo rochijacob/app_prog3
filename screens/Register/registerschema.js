@@ -3,7 +3,6 @@ import * as yup from 'yup';
 let LettersSpaces = /^[a-zA-Z\s]*$/;
 
 export const RegisterSchema = yup.object().shape({
-    user: yup.string().required('Debes tener un nombre de usuario'),
     email: yup.string()
     .required("Un email es requerido")
     .email("El email ingresado no es valido")
