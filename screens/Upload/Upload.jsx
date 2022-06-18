@@ -1,7 +1,7 @@
 import { View, Text, Modal } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { auth, storage } from '../../db/firebaseConfig'
-import { Box, Button, HStack, IconButton, Image, Input, Pressable, useToast, VStack } from 'native-base'
+import { AspectRatio, Box, Button, HStack, IconButton, Image, Input, Pressable, useToast, VStack } from 'native-base'
 import { Ionicons } from '@expo/vector-icons';
 import { Camera, CameraType } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -91,11 +91,11 @@ const Upload = () => {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{ flex: 0.5, justifyContent: 'space-between', alignItems: 'center' }}>
                     <Pressable onPress={openCamera}>
-                        <Box w='200' h='200' style={{ backgroundColor: 'rgba(0,0,0,0.1)', justifyContent: 'center', alignItems: 'center' }}>
-                            {data.image ? <Image source={{ uri: data.image }} width={200} height={200} /> : <Ionicons name="image" size={24} color="black" />}
+                        <Box ratio={16 / 9} w='200' style={{ backgroundColor: 'rgba(0,0,0,0.1)', justifyContent: 'center', alignItems: 'center' }}>
+                            {data.image ? <AspectRatio w="100%" ratio={16 / 9}><Image source={{ uri: data.image }} /></AspectRatio> : <Ionicons name="image" size={24} color="black" />}
                         </Box>
                     </Pressable>
-                    <VStack>
+                    <VStack space={3} w={200}>
                         <Input value={data.titulo} size='lg' variant="underlined" placeholder="Titulo de la foto" onChangeText={(text) => setData({ ...data, titulo: text })} />
                         <Input value={data.description} size='lg' variant="underlined" placeholder="Descripcion" onChangeText={(text) => setData({ ...data, description: text })} />
                     </VStack>

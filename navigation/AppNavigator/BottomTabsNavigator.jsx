@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { Profile, Posts, Upload } from '../../screens/screens'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tabroutes from './tabroutes'
+import PostStack from './PostStack'
 
 
 const { Navigator, Screen } = createBottomTabNavigator()
@@ -23,7 +24,7 @@ const BottomTabsNavigator = () => {
                         iconName = focused
                             ? 'person'
                             : 'person-outline';
-                    } else if (route.name === 'Posts') {
+                    } else if (route.name === 'PostStack') {
                         iconName = focused ? 'ios-newspaper' : 'ios-newspaper-outline';
                     } else if (route.name === 'Upload') {
                         iconName = focused ? 'ios-camera' : 'ios-camera-outline'
@@ -37,7 +38,7 @@ const BottomTabsNavigator = () => {
             })} initialRouteName={tabroutes.PROFILE}>
                 <Screen name='Profile' component={Profile} />
                 <Screen name='Upload' component={Upload} />
-                <Screen name='Posts' component={Posts} />
+                <Screen name='PostStack' component={PostStack} />
             </Navigator>
         </View>
     )

@@ -77,10 +77,25 @@ export default function useFirebase() {
         setPosts([...posts, data])
     }
 
+    const fetchPosts = () => {
+        db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
+            (docs) => {
+                let posts = [];
+                docs.forEach(post => {
+                    posts.push({
+                        id: post.id,
+                        data: post.data()
+                    })
+                })
+                setPosts(posts)
+            }
+        );
+    }
     return {
         registerUser,
         loginUser,
         logoutUser,
-        submitPost
+        submitPost,
+        fetchPosts
     }
 }
