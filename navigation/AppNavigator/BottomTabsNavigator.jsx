@@ -35,7 +35,7 @@ const BottomTabsNavigator = () => {
                 },
                 tabBarActiveTintColor: '#0398fc',
                 tabBarInactiveTintColor: 'gray',
-            })} initialRouteName={tabroutes.PROFILE}>
+            })} initialRouteName={tabroutes.POSTSTACK}>
                 <Screen name='Profile' component={Profile} />
                 <Screen name='Upload' component={Upload} />
                 <Screen name='PostStack' component={PostStack} />

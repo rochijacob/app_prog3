@@ -64,7 +64,11 @@ const Upload = () => {
         if (data.image !== false && data.titulo !== '' &&
             data.description !== '') {
             submitPost(data)
-
+            setData({
+                image: false,
+                titulo: '',
+                description: '',
+            })
             toast.show({
                 render: () => {
                     return <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
@@ -78,12 +82,6 @@ const Upload = () => {
                 placement: 'top'
             })
         }
-
-        setData({
-            image: false,
-            titulo: '',
-            description: '',
-        })
     }
 
     return (
@@ -91,7 +89,7 @@ const Upload = () => {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{ flex: 0.5, justifyContent: 'space-between', alignItems: 'center' }}>
                     <Pressable onPress={openCamera}>
-                        <Box ratio={16 / 9} w='200' style={{ backgroundColor: 'rgba(0,0,0,0.1)', justifyContent: 'center', alignItems: 'center' }}>
+                        <Box ratio={16 / 9} w='200' h='100' style={{ backgroundColor: 'rgba(0,0,0,0.1)', justifyContent: 'center', alignItems: 'center' }}>
                             {data.image ? <AspectRatio w="100%" ratio={16 / 9}><Image source={{ uri: data.image }} /></AspectRatio> : <Ionicons name="image" size={24} color="black" />}
                         </Box>
                     </Pressable>

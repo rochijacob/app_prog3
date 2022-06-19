@@ -9,13 +9,15 @@ import PostPreview from './PostPreview'
 const Posts = () => {
     const { posts } = useContext(UserContext)
     const { fetchPosts } = useFirebase()
+    console.log('posts', posts)
+
     useEffect(() => {
         fetchPosts()
     }, [])
 
 
     return (
-        <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
+        <SafeAreaView style={{ flex: 1, alignItems: 'center', marginBottom: 10 }}>
             {posts.length > 1 ? <FlatList style={{ flex: 1, width: '100%' }} data={posts} renderItem={({ item }) => <View style={{ flex: 1, alignItems: 'center' }}><PostPreview data={item} /></View>} /> : <Text>No hay posts</Text>}
         </SafeAreaView>
     )

@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useContext } from 'react'
 import { auth, db } from '../db/firebaseConfig'
-import Toast from 'react-native-toast-message';
+import firebase from 'firebase';
 import { UserContext } from '../providers/userContext';
 import { AuthContext } from '../providers/authContext';
 import { removeLocal, storeLocal } from '../helpers/localStorage';
@@ -74,7 +74,6 @@ export default function useFirebase() {
         }).catch((error) => {
             console.log('No se pudo crear')
         })
-        setPosts([...posts, data])
     }
 
     const fetchPosts = () => {
@@ -91,11 +90,58 @@ export default function useFirebase() {
             }
         );
     }
+
+    const likePost = (postId) => {
+        console.log('Like Post')
+        db.collection('posts')
+            .doc(postId)
+            .update({
+                likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+            })
+            .then(() => {
+                const pst = posts.map(post => {
+                    if (post.id === postId) {
+                        if (post.data.likes.length > 0) {
+                            post.data.likes = [auth.currentUser.email, ...post.data.likes]
+                        } else {
+                            post.data.likes = [auth.currentUser.email]
+                        }
+                    }
+                    return post
+                })
+                setPosts(pst)
+            })
+            .catch((error) => console.log(error))
+    }
+
+    const unLikePost = (postId) => {
+        console.log('Unlike Post')
+        db.collection('posts')
+            .doc(postId)
+            .update({
+                likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+            })
+            .then(() => {
+                const pst = posts.map(post => {
+                    if (post.id === postId) {
+                        post.data.likes = post.data.likes.filter(value => value !== auth.currentUser.email)
+                    }
+                    return post
+                })
+                setPosts(pst)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     return {
         registerUser,
         loginUser,
         logoutUser,
         submitPost,
-        fetchPosts
+        fetchPosts,
+        likePost,
+        unLikePost
     }
 }

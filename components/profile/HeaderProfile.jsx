@@ -28,7 +28,7 @@ const HeaderProfile = () => {
                 </HStack>
                 <HStack style={{ justifyContent: 'space-between', borderBottomWidth: 1.5, borderBottomColor: 'rgba(0,0,0,0.2)' }} my={2}>
                     <Text fontSize='lg'>Last Login</Text>
-                    <Text fontSize='lg'>{stringDates(user.metadata.lastSignInTime)}</Text>
+                    <Text fontSize='lg'>{stringDates(user?.metadata?.lastSignInTime)}</Text>
                 </HStack>
             </Box>
         </View>
