@@ -91,6 +91,12 @@ export default function useFirebase() {
         );
     }
 
+    const deletePost = (postId) => {
+        db.collection('posts')
+            .doc(postId)
+            .delete()
+    }
+
     const likePost = (postId) => {
         console.log('Like Post')
         db.collection('posts')
@@ -205,6 +211,7 @@ export default function useFirebase() {
         likePost,
         unLikePost,
         postComment,
-        deleteComment
+        deleteComment,
+        deletePost
     }
 }

@@ -1,6 +1,6 @@
 import { ScrollView, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { AspectRatio, Box, Button, Heading, HStack, IconButton, Image, Input, Stack, Text } from 'native-base'
 import { Ionicons } from '@expo/vector-icons';
 import useFirebase from '../../hooks/useFirebase';
@@ -14,7 +14,8 @@ const Post = () => {
     const [comment, setComment] = useState('')
     const [postData, setPostData] = useState({})
     const { posts } = useContext(UserContext)
-    const { likePost, unLikePost, postComment, deleteComment } = useFirebase()
+    const { likePost, unLikePost, postComment, deleteComment, deletePost } = useFirebase()
+    const navigation = useNavigation()
 
     useEffect(() => {
         const postMatch = posts.filter(value => value.id === data.id)
@@ -73,9 +74,15 @@ const Post = () => {
                     <Image alt='imagen' source={{ uri: data.data.photo }} />
                 </AspectRatio>
                 <Stack space={4} marginX={4} marginY={2}>
-                    <HStack alignItems='center' >
-                        <IconButton onPress={likear} borderRadius={50} icon={<Ionicons name={liked ? "heart" : "heart-outline"} size={24} color="red" />} />
-                        <Text>{postData?.data?.likes?.length}</Text>
+                    <HStack justifyContent='space-between'>
+                        <HStack alignItems='center' >
+                            <IconButton onPress={likear} borderRadius={50} icon={<Ionicons name={liked ? "heart" : "heart-outline"} size={24} color="red" />} />
+                            <Text>{postData?.data?.likes?.length}</Text>
+                        </HStack>
+                        <IconButton onPress={() => {
+                            deletePost(postData.id)
+                            navigation.navigate('All Posts')
+                        }} borderRadius={50} icon={<Ionicons name={"trash"} size={18} color="black" />} />
                     </HStack>
                     <Heading size="md" ml="-1">
                         {data?.data?.title}

@@ -9,7 +9,7 @@ import useFirebase from '../../hooks/useFirebase';
 const PostPreview = ({ data }) => {
     const [liked, setLiked] = useState(false)
     const navigation = useNavigation()
-    const { likePost, unLikePost } = useFirebase()
+    const { likePost, unLikePost, deletePost } = useFirebase()
 
     useEffect(() => {
         const match = data.data.likes.findIndex(element => {
@@ -85,6 +85,13 @@ const PostPreview = ({ data }) => {
                                 {data?.data?.description}
                             </Text>
                         </Stack>
+                        {data.data.owner === auth.currentUser.email &&
+                            <Stack space={0}>
+                                <HStack justifyContent='flex-end'>
+                                    <IconButton onPress={() => deletePost(data.id)} borderRadius={50} icon={<Ionicons name={"trash"} size={18} color="black" />} />
+                                </HStack>
+                            </Stack>
+                        }
                     </Stack>
                 </Box>
             }}
