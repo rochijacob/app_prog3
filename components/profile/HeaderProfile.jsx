@@ -8,7 +8,7 @@ const HeaderProfile = () => {
     const { user } = useContext(UserContext)
 
     return (
-        <View style={{ flex: 0.3, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
             <Box style={{ width: '20%' }}>
                 <Avatar size="lg" bg="blue.400" source={{
                     uri: user.photoUrl

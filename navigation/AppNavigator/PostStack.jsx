@@ -2,6 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Posts, Post } from '../../screens/screens'
+import { Input } from 'native-base'
 
 const { Navigator, Screen } = createNativeStackNavigator()
 

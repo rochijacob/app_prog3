@@ -6,7 +6,7 @@ import { auth } from '../../db/firebaseConfig';
 
 import useFirebase from '../../hooks/useFirebase';
 
-const PostPreview = ({ data }) => {
+const PostPreview = ({ data, navigate }) => {
     const [liked, setLiked] = useState(false)
     const navigation = useNavigation()
     const { likePost, unLikePost, deletePost } = useFirebase()
@@ -49,7 +49,7 @@ const PostPreview = ({ data }) => {
 
 
     return (
-        <Pressable style={{ width: '80%' }} onPress={() => navigation.navigate('Post', { data: data })}>
+        <Pressable style={{ width: '80%' }} onPress={() => { navigate && navigation.navigate('Post', { data: data }) }}>
             {({ isHovered }) => {
                 return <Box marginTop='2' rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" bg={isHovered ? 'coolGray.200' : 'coolGray.100'}>
                     <Box>

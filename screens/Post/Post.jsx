@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import useFirebase from '../../hooks/useFirebase';
 import { auth } from '../../db/firebaseConfig';
 import { UserContext } from '../../providers/userContext';
+import KeyboardAvoidingWrapper from '../../components/wrappers/KeyboardAvoidingWrapper';
 
 const Post = () => {
     const route = useRoute()
@@ -69,48 +70,50 @@ const Post = () => {
 
     return (
         <ScrollView>
-            <Box display={{ flex: 1, alignContent: 'center' }}>
-                <AspectRatio ratio={16 / 9}>
-                    <Image alt='imagen' source={{ uri: data.data.photo }} />
-                </AspectRatio>
-                <Stack space={4} marginX={4} marginY={2}>
-                    <HStack justifyContent='space-between'>
-                        <HStack alignItems='center' >
-                            <IconButton onPress={likear} borderRadius={50} icon={<Ionicons name={liked ? "heart" : "heart-outline"} size={24} color="red" />} />
-                            <Text>{postData?.data?.likes?.length}</Text>
+            <KeyboardAvoidingWrapper>
+                <Box display={{ flex: 1, alignContent: 'center' }}>
+                    <AspectRatio ratio={16 / 9}>
+                        <Image alt='imagen' source={{ uri: data.data.photo }} />
+                    </AspectRatio>
+                    <Stack space={4} marginX={4} marginY={2}>
+                        <HStack justifyContent='space-between' alignItems='center'>
+                            <HStack alignItems='center' >
+                                <IconButton onPress={likear} borderRadius={50} icon={<Ionicons name={liked ? "heart" : "heart-outline"} size={24} color="red" />} />
+                                <Text>{postData?.data?.likes?.length}</Text>
+                            </HStack>
+                            <IconButton onPress={() => {
+                                deletePost(postData.id)
+                                navigation.navigate('All Posts')
+                            }} borderRadius={50} icon={<Ionicons name={"trash"} size={18} color="black" />} />
                         </HStack>
-                        <IconButton onPress={() => {
-                            deletePost(postData.id)
-                            navigation.navigate('All Posts')
-                        }} borderRadius={50} icon={<Ionicons name={"trash"} size={18} color="black" />} />
-                    </HStack>
-                    <Heading size="md" ml="-1">
-                        {data?.data?.title}
-                    </Heading>
-                    <Text fontSize="xs" _light={{
-                        color: "blue.500"
-                    }} fontWeight="500" ml="-0.5" mt="-1">
-                        {postData?.data?.description}
-                    </Text>
-                    <Heading size="sm" >
-                        Comments
-                    </Heading>
-                    <ScrollView showsVerticalScrollIndicator={false} style={{ height: 100 }}>
-                        {postData?.data?.comments.map((comment, i) => (
-                            <Box style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Box style={{ flexDirection: 'row' }}>
-                                    <Text fontWeight='500' color='blue.500'>{`${comment.owner}: `}</Text>
-                                    <Text>{comment.text}</Text>
+                        <Heading size="md" ml="-1">
+                            {data?.data?.title}
+                        </Heading>
+                        <Text fontSize="xs" _light={{
+                            color: "blue.500"
+                        }} fontWeight="500" ml="-0.5" mt="-1">
+                            {postData?.data?.description}
+                        </Text>
+                        <Heading size="sm" >
+                            Comments
+                        </Heading>
+                        <ScrollView showsVerticalScrollIndicator={false} style={{ height: 100 }}>
+                            {postData?.data?.comments.map((comment, i) => (
+                                <Box key={i} style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                                    <Box style={{ flexDirection: 'row' }}>
+                                        <Text fontWeight='500' color='blue.500'>{`${comment.owner}: `}</Text>
+                                        <Text>{comment.text}</Text>
+                                    </Box>
+                                    {comment.owner === auth.currentUser.email &&
+                                        <IconButton onPress={() => deleteComment(comment.createdAt, data.id)} borderRadius={50} icon={<Ionicons name="close-outline" size={16} color="black" />} />
+                                    }
                                 </Box>
-                                {comment.owner === auth.currentUser.email &&
-                                    <IconButton onPress={() => deleteComment(comment.createdAt, data.id)} borderRadius={50} icon={<Ionicons name="close-outline" size={16} color="black" />} />
-                                }
-                            </Box>
-                        ))}
-                    </ScrollView>
-                    <Input onChangeText={(text) => setComment(text)} value={comment} placeholder='Comment' InputRightElement={<Button size="xs" rounded="none" w="1/6" h="full" onPress={() => handleClick()} >Post</Button>} />
-                </Stack>
-            </Box>
+                            ))}
+                        </ScrollView>
+                        <Input onChangeText={(text) => setComment(text)} value={comment} placeholder='Comment' InputRightElement={<Button size="xs" rounded="none" w="1/6" h="full" onPress={() => handleClick()} >Post</Button>} />
+                    </Stack>
+                </Box>
+            </KeyboardAvoidingWrapper>
         </ScrollView>
     )
 }
