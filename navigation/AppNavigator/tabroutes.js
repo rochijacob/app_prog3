@@ -1,5 +1,5 @@
 export default Object.freeze({
-    POSTSTACK: "PostStack",
+    POSTSTACK: "Posts",
     UPLOAD: "Upload",
     PROFILE: "Profile"
   });

@@ -135,6 +135,67 @@ export default function useFirebase() {
             })
     }
 
+    const postComment = (comment, postId) => {
+        console.log('Post Comment')
+        if (comment === '') {
+            return
+        }
+        db.collection('posts')
+            .doc(postId)
+            .update({
+                comments: firebase.firestore.FieldValue.arrayUnion({
+                    owner: auth.currentUser.email,
+                    text: comment,
+                    createdAt: Date.now()
+                })
+            })
+            .then(() => {
+                const pst = posts.map(post => {
+                    if (post.id === postId) {
+                        if (post.data.comments.length > 0) {
+                            post.data.comments = [{
+                                owner: auth.currentUser.email,
+                                text: comment,
+                                createdAt: Date.now()
+                            }, ...post.data.comments]
+                        } else {
+                            post.data.comments = [{
+                                owner: auth.currentUser.email,
+                                text: comment,
+                                createdAt: Date.now()
+                            }]
+                        }
+                    }
+                    return post
+                })
+                setPosts(pst)
+            })
+            .catch(error => console.log(error))
+    }
+
+    const deleteComment = (created, postId) => {
+        const post = posts.filter((element) => element.id === postId)
+        console.log(post[0])
+
+        const filterComments = post[0].data.comments.filter((element) => element.createdAt !== created)
+
+
+        const pst = posts.map(post => {
+            if (post.id === postId) {
+                post.data.comments = filterComments
+            }
+            return post
+        })
+        setPosts(pst)
+
+        db.collection('posts')
+            .doc(postId)
+            .update({
+                comments: filterComments
+            })
+            .catch((error) => console.log(error))
+    }
+
     return {
         registerUser,
         loginUser,
@@ -142,6 +203,8 @@ export default function useFirebase() {
         submitPost,
         fetchPosts,
         likePost,
-        unLikePost
+        unLikePost,
+        postComment,
+        deleteComment
     }
 }

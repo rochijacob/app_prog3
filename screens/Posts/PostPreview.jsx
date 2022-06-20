@@ -1,10 +1,53 @@
-import React from 'react'
-import { AspectRatio, Box, Center, Heading, Image, Pressable, Stack, Text } from 'native-base'
+import React, { useEffect, useState } from 'react'
+import { AspectRatio, Box, Center, Heading, HStack, IconButton, Image, Pressable, Stack, Text } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
+import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../../db/firebaseConfig';
+
+import useFirebase from '../../hooks/useFirebase';
 
 const PostPreview = ({ data }) => {
+    const [liked, setLiked] = useState(false)
     const navigation = useNavigation()
-    console.log(data)
+    const { likePost, unLikePost } = useFirebase()
+
+    useEffect(() => {
+        const match = data.data.likes.findIndex(element => {
+            if (element.includes(auth.currentUser.email)) {
+                return true
+            } else {
+                return false
+            }
+        })
+        console.log(match)
+        if (match === -1) {
+            setLiked(false)
+        } else {
+            setLiked(true)
+        }
+    }, [])
+
+    const likear = () => {
+        const match = data.data.likes.findIndex(element => {
+            if (element.includes(auth.currentUser.email)) {
+                return true
+            } else {
+                return false
+            }
+        })
+        if (match === -1) {
+            console.log('like post')
+            likePost(data.id)
+            setLiked(true)
+        } else {
+            console.log('unlike post')
+            unLikePost(data.id)
+            setLiked(false)
+        }
+        console.log(match)
+    }
+
+
     return (
         <Pressable style={{ width: '80%' }} onPress={() => navigation.navigate('Post', { data: data })}>
             {({ isHovered }) => {
@@ -22,15 +65,23 @@ const PostPreview = ({ data }) => {
                         </Center>
                     </Box>
                     <Stack p="4" space={3}>
+                        <HStack>
+                            <HStack alignItems='center'>
+                                <IconButton onPress={likear} borderRadius={50} icon={<Ionicons name={liked ? "heart" : "heart-outline"} size={24} color="red" />} />
+                                <Text>{data.data.likes.length}</Text>
+                            </HStack>
+                            <HStack alignItems='center' ml={10}>
+                                <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+                                <Text ml={2}>{data.data.comments.length}</Text>
+                            </HStack>
+                        </HStack>
                         <Stack space={2}>
-                            <Heading size="md" ml="-1">
+                            <Heading size="md">
                                 {data?.data?.title}
                             </Heading>
                             <Text fontSize="xs" _light={{
                                 color: "blue.500"
-                            }} _dark={{
-                                color: "violet.400"
-                            }} fontWeight="500" ml="-0.5" mt="-1">
+                            }} fontWeight="500" >
                                 {data?.data?.description}
                             </Text>
                         </Stack>

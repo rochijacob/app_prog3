@@ -8,7 +8,7 @@ const { Navigator, Screen } = createNativeStackNavigator()
 const PostStack = () => {
     return (
         <Navigator >
-            <Screen name='Posts' component={Posts} />
+            <Screen name='All Posts' component={Posts} />
             <Screen name='Post' component={Post} />
         </Navigator>
     )

@@ -1,7 +1,7 @@
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
-import { AspectRatio, Box, Heading, HStack, IconButton, Image, Stack, Text } from 'native-base'
+import { AspectRatio, Box, Button, Heading, HStack, IconButton, Image, Input, Stack, Text } from 'native-base'
 import { Ionicons } from '@expo/vector-icons';
 import useFirebase from '../../hooks/useFirebase';
 import { auth } from '../../db/firebaseConfig';
@@ -11,9 +11,10 @@ const Post = () => {
     const route = useRoute()
     const { data } = route.params
     const [liked, setLiked] = useState(false)
+    const [comment, setComment] = useState('')
     const [postData, setPostData] = useState({})
     const { posts } = useContext(UserContext)
-    const { likePost, unLikePost } = useFirebase()
+    const { likePost, unLikePost, postComment, deleteComment } = useFirebase()
 
     useEffect(() => {
         const postMatch = posts.filter(value => value.id === data.id)
@@ -33,7 +34,9 @@ const Post = () => {
             setLiked(true)
         }
         setPostData(postMatch[0])
-    })
+
+        console.log('current post', postData)
+    }, [])
 
     const likear = () => {
         const postMatch = posts.filter(value => value.id === data.id)
@@ -48,17 +51,25 @@ const Post = () => {
         if (match === -1) {
             console.log('like post')
             likePost(data.id)
+            setLiked(true)
         } else {
             console.log('unlike post')
             unLikePost(data.id)
+            setLiked(false)
         }
         console.log(match)
     }
 
+    const handleClick = () => {
+        postComment(comment, data.id)
+        setComment('')
+        console.log('Rochi')
+    }
+
     return (
-        <View>
-            <Box>
-                <AspectRatio w="100%" ratio={16 / 9}>
+        <ScrollView>
+            <Box display={{ flex: 1, alignContent: 'center' }}>
+                <AspectRatio ratio={16 / 9}>
                     <Image alt='imagen' source={{ uri: data.data.photo }} />
                 </AspectRatio>
                 <Stack space={4} marginX={4} marginY={2}>
@@ -71,14 +82,29 @@ const Post = () => {
                     </Heading>
                     <Text fontSize="xs" _light={{
                         color: "blue.500"
-                    }} _dark={{
-                        color: "violet.400"
                     }} fontWeight="500" ml="-0.5" mt="-1">
                         {postData?.data?.description}
                     </Text>
+                    <Heading size="sm" >
+                        Comments
+                    </Heading>
+                    <ScrollView showsVerticalScrollIndicator={false} style={{ height: 100 }}>
+                        {postData?.data?.comments.map((comment, i) => (
+                            <Box style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Box style={{ flexDirection: 'row' }}>
+                                    <Text fontWeight='500' color='blue.500'>{`${comment.owner}: `}</Text>
+                                    <Text>{comment.text}</Text>
+                                </Box>
+                                {comment.owner === auth.currentUser.email &&
+                                    <IconButton onPress={() => deleteComment(comment.createdAt, data.id)} borderRadius={50} icon={<Ionicons name="close-outline" size={16} color="black" />} />
+                                }
+                            </Box>
+                        ))}
+                    </ScrollView>
+                    <Input onChangeText={(text) => setComment(text)} value={comment} placeholder='Comment' InputRightElement={<Button size="xs" rounded="none" w="1/6" h="full" onPress={() => handleClick()} >Post</Button>} />
                 </Stack>
             </Box>
-        </View>
+        </ScrollView>
     )
 }
 

@@ -24,7 +24,7 @@ const BottomTabsNavigator = () => {
                         iconName = focused
                             ? 'person'
                             : 'person-outline';
-                    } else if (route.name === 'PostStack') {
+                    } else if (route.name === 'Posts') {
                         iconName = focused ? 'ios-newspaper' : 'ios-newspaper-outline';
                     } else if (route.name === 'Upload') {
                         iconName = focused ? 'ios-camera' : 'ios-camera-outline'
@@ -38,7 +38,7 @@ const BottomTabsNavigator = () => {
             })} initialRouteName={tabroutes.POSTSTACK}>
                 <Screen name='Profile' component={Profile} />
                 <Screen name='Upload' component={Upload} />
-                <Screen name='PostStack' component={PostStack} />
+                <Screen options={{ unmountOnBlur: true }} name='Posts' component={PostStack} />
             </Navigator>
         </View>
     )
