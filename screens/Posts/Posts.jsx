@@ -11,23 +11,43 @@ import { Ionicons } from '@expo/vector-icons';
 const Posts = () => {
     const { posts } = useContext(UserContext)
     const [filteredPosts, setFilteredPosts] = useState([])
+    const [filteredUsers, setFilteredUsers] = useState([])
     const [search, setSearch] = useState('')
-    const { fetchPosts } = useFirebase()
-    console.log('posts', posts)
+    const [users, setUsers] = useState([])
+    const { fetchPosts, fetchUsers } = useFirebase()
+
+
+    const fetchU = async () => {
+        const users = await fetchUsers()
+        setUsers(users)
+        console.log('found', users.length, 'users')
+    }
 
     useEffect(() => {
+        setSearch('')
         fetchPosts()
+        fetchU()
     }, [])
 
     useEffect(() => {
         setFilteredPosts(posts)
-    }, [posts])
+        setFilteredUsers(users)
+    }, [posts, users])
 
 
     useEffect(() => {
-        console.log(search.length)
         const filterPosts = search.length > 0 ? posts.filter((element) => element.data.owner.toLowerCase().includes(search.toLowerCase())) : posts
         setFilteredPosts(filterPosts)
+        console.log('filter posts', filterPosts.length)
+
+        const filteredUsers =
+            search.length > 0 ? users.filter((element) =>
+                element.data.email
+                    .toLowerCase()
+                    .includes(search.toLowerCase())
+            ) : users;
+        setFilteredUsers(filteredUsers)
+        console.log('filtered users', filteredUsers.length)
     }, [search])
 
 
@@ -39,7 +59,7 @@ const Posts = () => {
                     <IconButton icon={<Ionicons name="search" size={16} color="black" />} />
                 } />
             </Box>
-            {posts.length > 1 ? <FlatList showsVerticalScrollIndicator={false} style={{ flex: 1, width: '100%' }} data={filteredPosts} renderItem={({ item }) => <View style={{ flex: 1, alignItems: 'center' }}><PostPreview navigate={true} data={item} /></View>} /> : <Text>No hay posts</Text>}
+            {filteredUsers.length > 0 ? (filteredPosts.length > 0 ? <FlatList showsVerticalScrollIndicator={false} style={{ flex: 1, width: '100%' }} data={filteredPosts} renderItem={({ item }) => <View style={{ flex: 1, alignItems: 'center' }}><PostPreview navigate={true} data={item} /></View>} /> : <View style={{ flex: 1, width: '100%', alignItems: 'center' }}><Text>No hay posts para este usuario</Text></View>) : <View style={{ flex: 1, width: '100%', alignItems: 'center' }}><Text>No hay posts</Text></View>}
         </SafeAreaView>
     )
 }

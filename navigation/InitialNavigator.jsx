@@ -15,7 +15,6 @@ const InitialNavigator = () => {
 
     const handleFirstOpen = async () => {
         const u = await retrieveLocal('user')
-        console.log(u)
         setUser(u)
         const a = await retrieveLocal('auth')
         console.log('auth', a)
@@ -25,14 +24,13 @@ const InitialNavigator = () => {
     useEffect(() => {
         handleFirstOpen()
         auth.onAuthStateChanged((user) => {
-            console.log('Corriendo on state changed')
             if (!user) {
                 console.log('No auth change')
             } else {
                 console.log('authed user', user)
                 setUser(auth.currentUser)
                 setAuth(true)
-                storeLocal(true, 'auth')
+                storeLocal('true', 'auth')
             }
             setLoadingAuth(false)
         })

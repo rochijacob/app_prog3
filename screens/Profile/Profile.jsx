@@ -9,14 +9,13 @@ import { auth } from '../../db/firebaseConfig'
 
 const Profile = () => {
     const { logoutUser } = useFirebase()
-    const { user, posts } = useContext(UserContext)
+    const { posts } = useContext(UserContext)
     const [personalPosts, setPersonalPosts] = useState([])
 
     useEffect(() => {
         const filterPosts = posts.filter((element) => element.data.owner.toLowerCase() === auth.currentUser.email.toLowerCase())
         setPersonalPosts(filterPosts)
     }, [])
-    console.log(user)
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginHorizontal: 10 }}>
@@ -26,7 +25,7 @@ const Profile = () => {
             </Box>
             <Box style={{ flex: 0.6, width: '100%', paddingVertical: 12 }}>
                 <Heading>Tus Posteos:</Heading>
-                {posts.length > 1 ? <FlatList showsVerticalScrollIndicator={false} style={{ flex: 1, height: '100%', width: '100%' }} data={personalPosts} renderItem={({ item }) => <View style={{ flex: 1, alignItems: 'center' }}><PostPreview navigate={false} data={item} /></View>} /> : <Text>No hay posts</Text>}
+                {posts.length > 0 ? <FlatList showsVerticalScrollIndicator={false} style={{ flex: 1, height: '100%', width: '100%' }} data={personalPosts} renderItem={({ item }) => <View style={{ flex: 1, alignItems: 'center' }}><PostPreview navigate={false} data={item} /></View>} /> : <Text>No hay posts</Text>}
             </Box>
         </View>
     )

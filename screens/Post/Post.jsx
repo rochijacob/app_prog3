@@ -20,7 +20,6 @@ const Post = () => {
 
     useEffect(() => {
         const postMatch = posts.filter(value => value.id === data.id)
-        console.log('post match', postMatch[0])
 
         const match = postMatch[0].data.likes.findIndex(element => {
             if (element.includes(auth.currentUser.email)) {
@@ -36,8 +35,6 @@ const Post = () => {
             setLiked(true)
         }
         setPostData(postMatch[0])
-
-        console.log('current post', postData)
     }, [])
 
     const likear = () => {
@@ -59,7 +56,6 @@ const Post = () => {
             unLikePost(data.id)
             setLiked(false)
         }
-        console.log(match)
     }
 
     const handleClick = () => {
@@ -81,10 +77,12 @@ const Post = () => {
                                 <IconButton onPress={likear} borderRadius={50} icon={<Ionicons name={liked ? "heart" : "heart-outline"} size={24} color="red" />} />
                                 <Text>{postData?.data?.likes?.length}</Text>
                             </HStack>
-                            <IconButton onPress={() => {
-                                deletePost(postData.id)
-                                navigation.navigate('All Posts')
-                            }} borderRadius={50} icon={<Ionicons name={"trash"} size={18} color="black" />} />
+                            {auth?.currentUser?.email === postData?.data?.owner &&
+                                <IconButton onPress={() => {
+                                    deletePost(postData.id)
+                                    navigation.navigate('All Posts')
+                                }} borderRadius={50} icon={<Ionicons name={"trash"} size={18} color="black" />} />
+                            }
                         </HStack>
                         <Heading size="md" ml="-1">
                             {data?.data?.title}
@@ -104,7 +102,7 @@ const Post = () => {
                                         <Text fontWeight='500' color='blue.500'>{`${comment.owner}: `}</Text>
                                         <Text>{comment.text}</Text>
                                     </Box>
-                                    {comment.owner === auth.currentUser.email &&
+                                    {comment?.owner === auth.currentUser.email &&
                                         <IconButton onPress={() => deleteComment(comment.createdAt, data.id)} borderRadius={50} icon={<Ionicons name="close-outline" size={16} color="black" />} />
                                     }
                                 </Box>

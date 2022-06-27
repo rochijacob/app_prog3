@@ -1,6 +1,5 @@
 export function stringAvatar(name){
     let split = name?.split(' ')
-    console.log(split?.length)
     if(split?.length === 1){
         return {
             children: `${split[0].charAt(0)}`
@@ -19,7 +18,6 @@ export function stringAvatar(name){
 
   export function stringDates(date){
     let split = date?.split(' ')
-    console.log('date split', split)
     if(split?.length >= 1){
       return `${split[1]} ${split[2]} ${split[3]} `
     } else {

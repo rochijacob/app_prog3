@@ -16,15 +16,14 @@ export default function useFirebase() {
     const registerUser = (data) => {
         auth.createUserWithEmailAndPassword(data.email, data.password)
             .then(responseRegister => {
-                console.log('user Created', responseRegister);
                 responseRegister.user.updateProfile({
                     displayName: data.name
                 })
                 db.collection('users').add({
                     email: data.email,
-                    displayName: data.user,
+                    displayName: data.name,
                     createdAt: Date.now()
-                })
+                }).catch(e => console.log(e))
             })
             .catch(error => {
                 console.log(error);
@@ -121,7 +120,6 @@ export default function useFirebase() {
     }
 
     const unLikePost = (postId) => {
-        console.log('Unlike Post')
         db.collection('posts')
             .doc(postId)
             .update({
@@ -181,7 +179,6 @@ export default function useFirebase() {
 
     const deleteComment = (created, postId) => {
         const post = posts.filter((element) => element.id === postId)
-        console.log(post[0])
 
         const filterComments = post[0].data.comments.filter((element) => element.createdAt !== created)
 
@@ -202,6 +199,19 @@ export default function useFirebase() {
             .catch((error) => console.log(error))
     }
 
+    const fetchUsers = async () => {
+        let usersArray = []
+        const promise = await db.collection("users").get().then((documents) => {
+            documents.forEach((doc) => {
+                usersArray.push({
+                    id: doc.id,
+                    data: doc.data(),
+                });
+            })
+        })
+        return usersArray
+    }
+
     return {
         registerUser,
         loginUser,
@@ -212,6 +222,7 @@ export default function useFirebase() {
         unLikePost,
         postComment,
         deleteComment,
-        deletePost
+        deletePost,
+        fetchUsers
     }
 }

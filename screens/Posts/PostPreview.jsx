@@ -19,7 +19,6 @@ const PostPreview = ({ data, navigate }) => {
                 return false
             }
         })
-        console.log(match)
         if (match === -1) {
             setLiked(false)
         } else {
