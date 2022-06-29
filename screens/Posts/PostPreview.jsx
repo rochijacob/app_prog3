@@ -25,7 +25,8 @@ const PostPreview = ({ data, navigate }) => {
             setLiked(true)
         }
     }, [])
-
+    console.log('owner', data.data.owner)
+    console.log('email', auth.currentUser.email)
     const likear = () => {
         const match = data.data.likes.findIndex(element => {
             if (element.includes(auth.currentUser.email)) {

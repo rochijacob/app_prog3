@@ -90,7 +90,7 @@ const Upload = () => {
                 <View style={{ flex: 0.5, justifyContent: 'space-between', alignItems: 'center' }}>
                     <Pressable onPress={openCamera}>
                         <Box ratio={16 / 9} w='200' h='100' style={{ backgroundColor: 'rgba(0,0,0,0.1)', justifyContent: 'center', alignItems: 'center' }}>
-                            {data.image ? <AspectRatio w="100%" ratio={16 / 9}><Image source={{ uri: data.image }} /></AspectRatio> : <Ionicons name="image" size={24} color="black" />}
+                            {data.image ? <AspectRatio w="100%" ratio={16 / 9}><Image alt='imagen' source={{ uri: data.image }} /></AspectRatio> : <Ionicons name="image" size={24} color="black" />}
                         </Box>
                     </Pressable>
                     <VStack space={3} w={200}>

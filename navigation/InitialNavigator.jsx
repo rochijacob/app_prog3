@@ -9,7 +9,7 @@ import LoginNavigator from './LoginNavigator/LoginNavigator'
 
 
 const InitialNavigator = () => {
-    const { authenticate, loading, setAuth } = useContext(AuthContext)
+    const { authenticate, loading, setAuth, setLoading } = useContext(AuthContext)
     const { setUser, user } = useContext(UserContext)
     const [loadingAuth, setLoadingAuth] = useState(true)
 
@@ -18,11 +18,18 @@ const InitialNavigator = () => {
         setUser(u)
         const a = await retrieveLocal('auth')
         console.log('auth', a)
-        setAuth(a)
+        if (auth.currentUser) {
+            setAuth(a)
+            setLoading(false)
+        } else {
+            setAuth(false)
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
         handleFirstOpen()
+
         auth.onAuthStateChanged((user) => {
             if (!user) {
                 console.log('No auth change')
@@ -33,6 +40,7 @@ const InitialNavigator = () => {
                 storeLocal('true', 'auth')
             }
             setLoadingAuth(false)
+            setLoading(false)
         })
         setLoadingAuth(false)
     }, [])

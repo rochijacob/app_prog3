@@ -11,6 +11,7 @@ const Profile = () => {
     const { logoutUser } = useFirebase()
     const { posts } = useContext(UserContext)
     const [personalPosts, setPersonalPosts] = useState([])
+    console.log(personalPosts)
 
     useEffect(() => {
         const filterPosts = posts.filter((element) => element.data.owner.toLowerCase() === auth.currentUser.email.toLowerCase())
